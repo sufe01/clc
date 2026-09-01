@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salary Hike Calculator - Glassmorphism</title>
+  <style>
+    /* --- Design Tokens & Color Palette --- */
+    :root {
+      --accent-color: #8b5cf6;       /* Radiant Violet */
+      --accent-hover: #7c3aed;
+      --accent-glow: rgba(139, 92, 246, 0.4);
+      --glass-bg: rgba(18, 16, 38, 0.55);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --input-bg: rgba(255, 255, 255, 0.07);
+      --text-primary: #ffffff;
+      --text-secondary: #c4b5fd;
+      --text-muted: #a78bfa;
+      --tab-bg: rgba(0, 0, 0, 0.25);
+      --active-tab-bg: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      --radius-lg: 24px;
+      --radius-md: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--text-primary);
+      /* High-resolution dark gradient atmospheric background */
+      background: linear-gradient(rgba(10, 8, 20, 0.65), rgba(10, 8, 20, 0.75)), 
+                  url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    }
+
+    /* --- Ambient Glow Container --- */
+    .glass-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* Soft ambient lighting behind the glass card */
+    .glass-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+      z-index: -1;
+      filter: blur(40px);
+    }
+
+    /* --- Glassmorphism Card --- */
+    .calculator-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 36px 32px 24px;
+      text-align: center;
+    }
+
+    .card-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header p {
+      font-size: 0.925rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* --- Pill-Style Tab Switcher --- */
+    .tab-container {
+      background: var(--tab-bg);
+      padding: 6px;
+      border-radius: 50px;
+      display: flex;
+      margin: 0 32px 28px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .tab-btn.active {
+      background: var(--active-tab-bg);
+      color: #ffffff;
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    /* --- Input Form --- */
+    .form-body {
+      padding: 0 32px 32px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 480px) {
+      .input-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+      color: var(--text-primary);
+      background: var(--input-bg);
+    }
+
+    .input-wrapper input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--accent-color);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.25);
+    }
+
+    /* Remove Spin Buttons in Number Inputs */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+
+    /* --- Action Buttons --- */
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 12px 36px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--active-tab-bg);
+      color: #ffffff;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--glass-border);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* --- Output Display --- */
+    .result-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-top: 1px solid var(--glass-border);
+      padding: 24px 32px;
+      text-align: center;
+    }
+
+    .result-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .result-value {
+      font-size: 1.35rem;
+      color: #a7f3d0;
+      font-weight: 800;
+      text-shadow: 0 0 12px rgba(167, 243, 208, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glass-wrapper">
+    <div class="calculator-card">
+      
+      <div class="card-header">
+        <h1>Salary Hike Calculator</h1>
+        <p>Calculate your updated compensation or estimate your raise percentage instantly.</p>
+      </div>
+
+      <div class="tab-container">
+        <button class="tab-btn active" id="tab-mode-1" onclick="switchMode(1)">
+          Find salary by hike %
+        </button>
+        <button class="tab-btn" id="tab-mode-2" onclick="switchMode(2)">
+          Find hike % by salary
+        </button>
+      </div>
+
+      <div class="form-body">
+        <div class="input-grid">
+          <div class="form-group">
+            <label for="current-salary">Current Salary :</label>
+            <div class="input-wrapper">
+              <input type="number" id="current-salary" placeholder="e.g. 45000" min="0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label id="dynamic-label" for="dynamic-input">Hike percentage :</label>
+            <div class="input-wrapper">
+              <input type="number" id="dynamic-input" placeholder="e.g. 15" min="0" step="any">
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="calculate()">Calculate</button>
+          <button class="btn btn-secondary" onclick="clearFields()">Clear</button>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <span class="result-title">
+          <span id="result-label">Your new salary after the hike is :</span>
+          <span class="result-value" id="result-value">--</span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentMode = 1;
+
+    const tabMode1 = document.getElementById('tab-mode-1');
+    const tabMode2 = document.getElementById('tab-mode-2');
+    const dynamicLabel = document.getElementById('dynamic-label');
+    const dynamicInput = document.getElementById('dynamic-input');
+    const currentSalaryInput = document.getElementById('current-salary');
+    const resultLabel = document.getElementById('result-label');
+    const resultValue = document.getElementById('result-value');
+
+    function switchMode(mode) {
+      currentMode = mode;
+      clearFields();
+
+      if (mode === 1) {
+        tabMode1.classList.add('active');
+        tabMode2.classList.remove('active');
+        dynamicLabel.textContent = 'Hike percentage :';
+        dynamicInput.placeholder = 'e.g. 15';
+        resultLabel.textContent = 'Your new salary after the hike is :';
+      } else {
+        tabMode2.classList.add('active');
+        tabMode1.classList.remove('active');
+        dynamicLabel.textContent = 'New Salary :';
+        dynamicInput.placeholder = 'e.g. 70000';
+        resultLabel.textContent = 'Your hike percentage is :';
+      }
+    }
+
+    function calculate() {
+      const currentSalary = parseFloat(currentSalaryInput.value);
+      const dynamicVal = parseFloat(dynamicInput.value);
+
+      if (isNaN(currentSalary) || currentSalary <= 0) {
+        alert('Please enter a valid current salary.');
+        return;
+      }
+
+      if (isNaN(dynamicVal) || dynamicVal < 0) {
+        alert('Please enter a valid input value.');
+        return;
+      }
+
+      if (currentMode === 1) {
+        const hikeAmount = (currentSalary * dynamicVal) / 100;
+        const newSalary = currentSalary + hikeAmount;
+        resultValue.textContent = newSalary.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      } else {
+        const hikePercentage = ((dynamicVal - currentSalary) / currentSalary) * 100;
+        resultValue.textContent = `${hikePercentage.toFixed(2)}%`;
+      }
+    }
+
+    function clearFields() {
+      currentSalaryInput.value = '';
+      dynamicInput.value = '';
+      resultValue.textContent = '--';
+    }
+  </script>
+</body>
+</html>
