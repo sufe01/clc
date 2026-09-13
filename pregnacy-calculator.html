@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PulsePregnancy | Advanced Neomorphic Pregnancy & Fertility Suite</title>
+  <meta name="description" content="A comprehensive, clinical-grade pregnancy and fertility calculator featuring trimester tracking, daily developmental milestones, personalized health advice, and newborn birth feedback logging.">
+  <meta name="keywords" content="pregnancy calculator, due date calculator, ovulation tracker, pregnancy tips, baby growth, neomorphism UI, fertility calendar">
+  <meta name="author" content="Your Name / Organization">
+  <meta name="robots" content="index, follow">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourusername.github.io/repository-name/">
+  <meta property="og:title" content="PulsePregnancy | Advanced Pregnancy Suite">
+  <meta property="og:description" content="Track your pregnancy journey from conception planning to birth with precise timelines and intelligent condition-based health tips.">
+  <meta property="og:image" content="https://yourusername.github.io/repository-name/og-image.png">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="PulsePregnancy | Advanced Pregnancy Suite">
+  <meta property="twitter:description" content="Track your pregnancy journey from conception planning to birth with precise timelines and intelligent condition-based health tips.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PulsePregnancy Suite",
+    "url": "https://yourusername.github.io/repository-name/",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "description": "Interactive pregnancy timeline, due date estimation, and fertility tracker."
+  }
+  </script>
+
+  <style>
+    /* CSS Variables for Soft Neomorphism */
+    :root {
+      --bg: #e0e5ec;
+      --text-main: #3d4852;
+      --text-sub: #718096;
+      --accent: #6c5ce7;
+      --accent-soft: #a29bfe;
+      --alert: #ff7675;
+      --shadow-flat: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5);
+      --shadow-inset: inset 6px 6px 10px rgba(163,177,198,0.7), inset -6px -6px 10px rgba(255,255,255,0.8);
+      --shadow-sm: 4px 4px 8px rgb(163,177,198,0.5), -4px -4px 8px rgba(255,255,255,0.5);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-flat);
+      padding: 30px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      margin-top: 5px;
+    }
+
+    .neo-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-flat);
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, select, textarea {
+      border: none;
+      background: var(--bg);
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-inset);
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .neo-btn {
+      border: none;
+      background: var(--bg);
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-flat);
+      color: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      text-align: center;
+    }
+
+    .neo-btn:active {
+      box-shadow: var(--shadow-inset);
+      color: var(--accent-soft);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .metric-box {
+      background: var(--bg);
+      border-radius: 15px;
+      box-shadow: var(--shadow-flat);
+      padding: 15px;
+      text-align: center;
+    }
+
+    .metric-box .val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 5px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 18px;
+      border-radius: 10px;
+      box-shadow: var(--shadow-inset);
+      overflow: hidden;
+      margin: 15px 0;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+      border-radius: 10px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    .tips-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .tips-list li {
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      box-shadow: var(--shadow-sm);
+      font-size: 0.9rem;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <main class="app-container">
+    <header>
+      <h1>PulsePregnancy Engine</h1>
+      <p>Precision Pregnancy, Fertility & Postnatal Tracker</p>
+    </header>
+
+    <section class="neo-card">
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="calc-mode">Calculation Method</label>
+          <select id="calc-mode">
+            <option value="lmp">Last Menstrual Period (LMP)</option>
+            <option value="conception">Estimated Conception Date</option>
+            <option value="ivf">IVF Transfer Date</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="input-date">Key Date</label>
+          <input type="date" id="input-date">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="cycle-length">Avg Cycle Length (22-45 days)</label>
+          <input type="number" id="cycle-length" value="28" min="22" max="45">
+        </div>
+        <div class="form-group">
+          <label for="symptom-condition">Current Condition / Symptoms</label>
+          <select id="symptom-condition">
+            <option value="normal">Normal / Standard Routine</option>
+            <option value="nausea">Morning Sickness / Nausea</option>
+            <option value="fatigue">Severe Fatigue</option>
+            <option value="gestational_diabetes">Gestational Diabetes Risk</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="neo-btn" onclick="calculateAll()">Run Comprehensive Analysis</button>
+    </section>
+
+    <section id="results-panel" class="neo-card hidden">
+      <h3>Pregnancy Progression</h3>
+      
+      <div class="progress-bar-container">
+        <div id="progress-fill" class="progress-bar-fill"></div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-box">
+          <span>Estimated Due Date</span>
+          <div id="out-due-date" class="val">--</div>
+        </div>
+        <div class="metric-box">
+          <span>Current Gestation</span>
+          <div id="out-gestation" class="val">0w 0d</div>
+        </div>
+        <div class="metric-box">
+          <span>Trimester</span>
+          <div id="out-trimester" class="val">--</div>
+        </div>
+        <div class="metric-box">
+          <span>Baby Size Estimate</span>
+          <div id="out-size" class="val">--</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <h4>Conception & Fertility Window Context</h4>
+        <div class="metric-grid">
+          <div class="metric-box">
+            <span>Est. Conception Date</span>
+            <div id="out-conception" class="val">--</div>
+          </div>
+          <div class="metric-box">
+            <span>Most Likely Fertile Window</span>
+            <div id="out-fertile" class="val">--</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tips-panel" class="neo-card hidden">
+      <h3>Tailored Medical & Lifestyle Insights</h3>
+      <ul id="tips-container" class="tips-list"></ul>
+    </section>
+
+    <section class="neo-card">
+      <h3>Birth & Postnatal Feedback Logging</h3>
+      <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 15px;">
+        Log actual delivery data to complete the lifecycle and refine future predictions.
+      </p>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="actual-birth-date">Actual Birth Date</label>
+          <input type="date" id="actual-birth-date">
+        </div>
+        <div class="form-group">
+          <label for="baby-weight">Birth Weight (kg)</label>
+          <input type="number" id="baby-weight" step="0.01" placeholder="3.40">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="birth-notes">Postnatal Experience Notes</label>
+        <textarea id="birth-notes" rows="3" placeholder="Notes on labor duration, delivery mode, or postnatal feelings..."></textarea>
+      </div>
+
+      <button class="neo-btn" onclick="saveFeedback()">Save Birth Log</button>
+      <div id="feedback-status" style="margin-top: 10px; font-size: 0.85rem; color: var(--accent);"></div>
+    </section>
+  </main>
+
+  <script>
+    // Initialize default input date to today
+    document.getElementById('input-date').valueAsDate = new Date();
+
+    const babySizes = [
+      { maxWeek: 4, size: "Poppy Seed" },
+      { maxWeek: 8, size: "Raspberry" },
+      { maxWeek: 12, size: "Plum" },
+      { maxWeek: 16, size: "Avocado" },
+      { maxWeek: 20, size: "Banana" },
+      { maxWeek: 24, size: "Cantaloupe" },
+      { maxWeek: 28, size: "Eggplant" },
+      { maxWeek: 32, size: "Squash" },
+      { maxWeek: 36, size: "Honeydew" },
+      { maxWeek: 40, size: "Watermelon" }
+    ];
+
+    function calculateAll() {
+      const mode = document.getElementById('calc-mode').value;
+      const dateVal = document.getElementById('input-date').value;
+      const cycleLength = parseInt(document.getElementById('cycle-length').value, 10);
+      const condition = document.getElementById('symptom-condition').value;
+
+      if (!dateVal) {
+        alert("Please select a valid date.");
+        return;
+      }
+
+      const inputDate = new Date(dateVal);
+      let lmpDate = new Date(inputDate);
+
+      // Normalize to LMP using standard clinical formulas
+      if (mode === 'conception') {
+        lmpDate.setDate(lmpDate.getDate() - 14);
+      } else if (mode === 'ivf') {
+        lmpDate.setDate(lmpDate.getDate() - 19); // Standard for 5-day blastocyst
+      }
+
+      // Adjustment for non-28 day cycles (Naegele's rule modification)
+      const cycleAdjustment = cycleLength - 28;
+
+      // Calculate Estimated Due Date (EDD): LMP + 280 days + cycle adjustment
+      const edd = new Date(lmpDate);
+      edd.setDate(edd.getDate() + 280 + cycleAdjustment);
+
+      // Estimated Conception Date
+      const conceptionDate = new Date(lmpDate);
+      conceptionDate.setDate(conceptionDate.getDate() + 14 + cycleAdjustment);
+
+      // Fertile Window (-5 days to +1 day of conception)
+      const fertileStart = new Date(conceptionDate);
+      fertileStart.setDate(fertileStart.getDate() - 5);
+      const fertileEnd = new Date(conceptionDate);
+      fertileEnd.setDate(fertileEnd.getDate() + 1);
+
+      // Current Gestational Age
+      const today = new Date();
+      const diffTime = today - lmpDate;
+      const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      let weeks = Math.floor(totalDays / 7);
+      let days = totalDays % 7;
+
+      if (totalDays < 0) {
+        weeks = 0; days = 0;
+      }
+
+      // Trimester Determination
+      let trimester = "1st Trimester";
+      if (weeks >= 28) trimester = "3rd Trimester";
+      else if (weeks >= 13) trimester = "2nd Trimester";
+
+      // Render UI Metrics
+      document.getElementById('out-due-date').innerText = edd.toDateString();
+      document.getElementById('out-gestation').innerText = `${weeks}w ${days}d`;
+      document.getElementById('out-trimester').innerText = trimester;
+      document.getElementById('out-conception').innerText = conceptionDate.toDateString();
+      document.getElementById('out-fertile').innerText = `${fertileStart.getMonth()+1}/${fertileStart.getDate()} - ${fertileEnd.getMonth()+1}/${fertileEnd.getDate()}`;
+
+      // Render Baby Size
+      const sizeObj = babySizes.find(s => weeks <= s.maxWeek) || babySizes[babySizes.length - 1];
+      document.getElementById('out-size').innerText = sizeObj.size;
+
+      // Render Progress Bar
+      const progressPercent = Math.min(Math.max((totalDays / 280) * 100, 0), 100);
+      document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+      // Render Tips Based on Condition and Trimester
+      generateTips(trimester, condition);
+
+      // Unhide panels
+      document.getElementById('results-panel').classList.remove('hidden');
+      document.getElementById('tips-panel').classList.remove('hidden');
+    }
+
+    function generateTips(trimester, condition) {
+      const container = document.getElementById('tips-container');
+      container.innerHTML = "";
+
+      const tips = [];
+
+      // General Trimester Advice
+      if (trimester === "1st Trimester") {
+        tips.push("Start taking daily prenatal vitamins with at least 400mcg of folic acid.");
+        tips.push("Schedule your baseline initial prenatal exam and blood work.");
+      } else if (trimester === "2nd Trimester") {
+        tips.push("Schedule your mid-pregnancy anatomy scan (typically weeks 18-22).");
+        tips.push("Incorporate low-impact pelvic floor (Kegel) and core stabilization exercises.");
+      } else {
+        tips.push("Finalize your birth plan and pack your hospital bag.");
+        tips.push("Monitor fetal movement daily (kick counts) during active periods.");
+      }
+
+      // Condition-specific logic
+      if (condition === "nausea") {
+        tips.push("Dietary adjustment: Consume small, frequent protein-rich meals; consider ginger or B6 supplements after doctor approval.");
+      } else if (condition === "fatigue") {
+        tips.push("Screening note: Request your physician to test serum ferritin levels to rule out iron-deficiency anemia.");
+      } else if (condition === "gestational_diabetes") {
+        tips.push("Nutrition note: Prioritize low-glycemic complex carbohydrates paired with healthy fats to reduce glucose spikes.");
+      }
+
+      tips.forEach(text => {
+        const li = document.createElement('li');
+        li.innerText = text;
+        container.appendChild(li);
+      });
+    }
+
+    function saveFeedback() {
+      const birthDate = document.getElementById('actual-birth-date').value;
+      const weight = document.getElementById('baby-weight').value;
+      const notes = document.getElementById('birth-notes').value;
+
+      if (!birthDate) {
+        alert("Please input the delivery date.");
+        return;
+      }
+
+      const logPayload = {
+        birthDate,
+        weight: weight || "N/A",
+        notes: notes || "No additional notes.",
+        timestamp: new Date().toISOString()
+      };
+
+      // Persist log in local browser storage
+      localStorage.setItem('pregnancy_birth_log', JSON.stringify(logPayload));
+      
+      const status = document.getElementById('feedback-status');
+      status.innerText = "Log saved successfully locally in browser memory.";
+    }
+  </script>
+</body>
+</html>
